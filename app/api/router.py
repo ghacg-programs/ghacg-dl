@@ -22,6 +22,14 @@ def redirect(path: str) -> RedirectResponse:
     cfg = get_config()
     expire = int(time.time()) + 3600
     sign_value = openlist_sign(f"/{path}", cfg.sign_token, expire)
+    # 均摊负载
     base = URL(random.choice(cfg.fs_base))
     target = (base / path).with_query(sign=sign_value)
-    return RedirectResponse(url=str(target), status_code=302)
+
+    response = RedirectResponse(url=str(target), status_code=302)
+    # 防止Cloudflare缓存导致返回过期链接
+    response.headers["Cache-Control"] = "no-store, private, max-age=0"
+    response.headers["Cloudflare-CDN-Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response

@@ -7,7 +7,7 @@ from typing import Union, TypeAlias
 from numbers import Real
 from datetime import datetime, timezone, date
 
-TimeLike: TypeAlias = Union[datetime, date, str, Real]
+TimeLike: TypeAlias = Union[datetime, date, str, Real, int]
 """时间类型别名，支持 datetime、date、ISO 格式字符串或数值时间戳。"""
 
 def to_utc_timestamp(t: TimeLike) -> int:
