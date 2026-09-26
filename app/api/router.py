@@ -20,7 +20,7 @@ def root() -> RedirectResponse:
 @router.get("/d/{path:path}", dependencies=[Depends(verify_request_source)])
 def redirect(path: str) -> RedirectResponse:
     cfg = get_config()
-    expire = int(time.time()) + 3600
+    expire = int(time.time()) + 86400
     sign_value = openlist_sign(f"/{path}", cfg.sign_token, expire)
     # 均摊负载
     base = URL(random.choice(cfg.fs_base))
